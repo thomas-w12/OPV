@@ -8,17 +8,17 @@ import GUIModel.*;
 
 
 public class SelectorPanel extends JPanel implements ModelObserver {
+
     private Model model;
 
     private JLabel opvSelectorTitleLabel;
     private JComboBox<String> opvSelector;
     private JLabel eReiheSelectorTitleLabel;
     private JComboBox<String> eReiheSelector;
-    private JButton calculateButton;
     
     public SelectorPanel(Model model) {
         this.model = model;
-        model.addObserver(this);
+        model.addOPVObserver(this);
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -39,6 +39,9 @@ public class SelectorPanel extends JPanel implements ModelObserver {
             public void actionPerformed(ActionEvent e) {
                 String selectedImage = (String) opvSelector.getSelectedItem();
                 model.setSelectedOPV(selectedImage);
+                model.setAusgangsspannung(null);
+                model.setVerstärkung(null);
+                model.setWiderstände(null);
             }
         });
 
@@ -49,29 +52,24 @@ public class SelectorPanel extends JPanel implements ModelObserver {
         add(eReiheSelectorTitleLabel);
 
         eReiheSelector = new JComboBox<>();
+        eReiheSelector.addItem("Keine");
         eReiheSelector.addItem("E12");
         eReiheSelector.addItem("E24");
         eReiheSelector.setSelectedIndex(0);
+        model.setSelectedEReihe((String) eReiheSelector.getSelectedItem());
 
         // Add ActionListener to handle E-Reihe selection changes
         eReiheSelector.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedE12 = (String) eReiheSelector.getSelectedItem();
-                model.setSelectedEReihe(selectedE12);
+                String selectedEReihe = (String) eReiheSelector.getSelectedItem();
+                model.setSelectedEReihe(selectedEReihe);
             }
         });
 
         add(eReiheSelector);
 
-        // Create the calculate button
-        calculateButton = new JButton("Berechnen");
-        calculateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                model.calculate();
-            }
-        });
+
 
     }
 

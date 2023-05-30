@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null); // Center the frame on the screen
         setLayout(new BorderLayout());
-
+        
         /**
          * Create and configure UI components 
          **/ 

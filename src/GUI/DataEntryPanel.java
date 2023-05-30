@@ -4,11 +4,17 @@ import javax.swing.*;
 
 import GUIModel.Model;
 import GUIModel.ModelObserver;
+import operationsverstaerker.Invertierer;
+import operationsverstaerker.NichtInvertierer;
+import operationsverstaerker.Subtrahierverstärker;
+import operationsverstaerker.Summierverstärker;
+import widerstand.Widerstand;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DataEntryPanel extends JPanel implements ModelObserver {
@@ -16,7 +22,8 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
     private Model model;
 
     private JPanel entriesPanel;
-    private JPanel entriesContainerPanel;
+    private JPanel resistorBorderLayoutPanel;
+    private JPanel voltageBorderLayoutPanel;
 
     private JPanel resistorPanel;
     private JPanel voltagePanel;
@@ -29,14 +36,25 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
     private List<JTextField> resistorTextFields;
     private List<JLabel> voltageLabels;
     private List<JTextField> voltageTextFields;
+
+    private JPanel buttonPanel;
+    private JPanel addButtonPanel;
+    private JPanel calculateButtonPanel;
+
     private JButton addButton;
     private JButton removeButton;
 
+    private JButton calculateButton;
+
     public DataEntryPanel(Model model) {
+
+
+
         this.model = model;
-        model.addObserver(this);
+        model.addOPVObserver(this);
 
         setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding of 10 pixels
         resistorLabels = new ArrayList<>();
         resistorTextFields = new ArrayList<>();
 
@@ -71,25 +89,44 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
 
         // Set the constraints for vertical alignment
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.gridx = 0; // X-coordinate in the grid
+        gbc.gridy = 0; // Y-coordinate in the grid
+        gbc.weightx = 1.0; // Horizontal weight for resizing
+        gbc.weighty = 0.5; // Vertical weight for resizing
+        gbc.fill = GridBagConstraints.BOTH; // Fill the cell both horizontally and vertically
+        gbc.anchor = GridBagConstraints.CENTER; // Center the component within the cell
 
-        entriesPanel.add(resistorLabel, gbc);
+
+
+
+        // entriesPanel.add(resistorLabel, gbc);
+        // gbc.gridy = 1;
+        // entriesPanel.add(resistorScrollPane, gbc);
+        // gbc.gridy = 2;
+        // entriesPanel.add(voltageLabel, gbc);
+        // gbc.gridy = 3;
+        // entriesPanel.add(voltageScrollPane, gbc);
+
+        resistorBorderLayoutPanel = new JPanel(new BorderLayout());
+        resistorBorderLayoutPanel.add(resistorLabel, BorderLayout.NORTH);
+        resistorBorderLayoutPanel.add(resistorScrollPane, BorderLayout.CENTER);
+
+        voltageBorderLayoutPanel = new JPanel(new BorderLayout());
+        voltageBorderLayoutPanel.add(voltageLabel, BorderLayout.NORTH);
+        voltageBorderLayoutPanel.add(voltageScrollPane, BorderLayout.CENTER);
+
+        entriesPanel.add(resistorBorderLayoutPanel, gbc);
+
         gbc.gridy = 1;
-        entriesPanel.add(resistorScrollPane, gbc);
+        gbc.weighty = 0.0; // No vertical weight
+        entriesPanel.add(new JPanel(), gbc);
+
+        // Add the second BorderLayout to the GridBagLayout
         gbc.gridy = 2;
-        entriesPanel.add(voltageLabel, gbc);
-        gbc.gridy = 3;
-        entriesPanel.add(voltageScrollPane, gbc);
+        gbc.weighty = 0.5; // Equal weight for the two Borderlayouts
+        entriesPanel.add(voltageBorderLayoutPanel, gbc);
 
 
-        // Create the initial label and text field
-        // addDataEntryField("R_2", resistorPanel, resistorLabels, resistorTextFields);
-        // addDataEntryField("U_e", voltagePanel, voltageLabels, voltageTextFields);
-
-        update();
 
         // Wrap the entries panel in a scroll pane
         // JScrollPane scrollPane = new JScrollPane(entriesPanel);
@@ -100,60 +137,96 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
 
 
         // Create the "Add" button
-        addButton = new JButton("Add");
+        addButton = new JButton("+");
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addDataEntryField("R_2", resistorPanel, resistorLabels, resistorTextFields);
-                // addDataEntryField("U_e", voltagePanel, voltageLabels, voltageTextFields);
+                int index = resistorLabels.size();
+                addDataEntryField("R_1" + index, resistorPanel, resistorLabels, resistorTextFields);
+                addDataEntryField("U_e" + index, voltagePanel, voltageLabels, voltageTextFields);
                 revalidate();
                 repaint();
             }
         });
 
         // Create the "Remove" button
-        removeButton = new JButton("Remove");
+        removeButton = new JButton("-");
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // removeDataEntryField();
+                int labelSize = resistorLabels.size();
+                if (labelSize >= 4) {
+                    removeDataEntryField(resistorPanel, resistorLabels, resistorTextFields);
+                    removeDataEntryField(voltagePanel, voltageLabels, voltageTextFields);
+                }
+                revalidate();
+                repaint();
+            }
+        });
+
+        // Create the calculate Button
+        calculateButton = new JButton("Berechnen");
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculate();
                 revalidate();
                 repaint();
             }
         });
 
         // Create a panel to hold the buttons
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
+        buttonPanel = new JPanel();
+        BoxLayout buttonPanelLayout = new BoxLayout(buttonPanel, BoxLayout.Y_AXIS);
+        buttonPanel.setLayout(buttonPanelLayout);
+
+        addButtonPanel = new JPanel(new FlowLayout());
 
         // Add the "Add" button to the panel
-        buttonPanel.add(addButton);
-        buttonPanel.add(removeButton);
+        addButtonPanel.add(addButton);
+        addButtonPanel.add(removeButton);
+
+        // Calculate Button
+        calculateButtonPanel = new JPanel(new FlowLayout());
+        calculateButtonPanel.add(calculateButton);
+
+        // Add the Panels to the Button Panel
+        buttonPanel.add(addButtonPanel);
+        buttonPanel.add(calculateButtonPanel);
+
 
         // Add the button panel to the main panel
         add(buttonPanel, BorderLayout.SOUTH);
+
+
+        // Create the initial label and text field
+        update();
     }
 
     private void addDataEntryField(String labelString, JPanel panel, List<JLabel> labels, List<JTextField> textFields) {
         // Create a new label and text field
         int index = labels.size() + 1;
         JLabel label = new JLabel(labelString + ":");
+        label.setVerticalAlignment(SwingConstants.TOP);
+
         JTextField textField = new JTextField(10);
+        textField.setAlignmentY(0);
 
         // Add the label and text field to the panel
         GridBagConstraints labelConstraints = new GridBagConstraints();
         labelConstraints.gridx = 0;
         labelConstraints.gridy = index;
-        labelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        labelConstraints.anchor = GridBagConstraints.NORTH;
         labelConstraints.insets = new Insets(5, 5, 0, 5);
-        panel.add(label, labelConstraints);
+        panel.add(label, labelConstraints, index-1);
 
         GridBagConstraints textFieldConstraints = new GridBagConstraints();
         textFieldConstraints.gridx = 1;
         textFieldConstraints.gridy = index;
-        textFieldConstraints.anchor = GridBagConstraints.NORTHWEST;
+        textFieldConstraints.anchor = GridBagConstraints.NORTH;
         textFieldConstraints.insets = new Insets(5, 0, 0, 5);
-        panel.add(textField, textFieldConstraints);
+        panel.add(textField, textFieldConstraints, index-1);
+
 
         // Store the label and text field references in lists
         labels.add(label);
@@ -171,7 +244,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         textFields.remove(index);
     }
 
-    public List<Double> getWiderstände() {
+    private List<Double> getWiderstände() {
         List<Double> entries = new ArrayList<>();
         for (JTextField textField : resistorTextFields) {
             String text = textField.getText();
@@ -185,7 +258,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         return entries;
     }
 
-    public List<Double> getSpannungen() {
+    private List<Double> getSpannungen() {
         List<Double> entries = new ArrayList<>();
         for (JTextField textField : voltageTextFields) {
             String text = textField.getText();
@@ -197,6 +270,128 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
             }
         }
         return entries;
+    }
+
+    private void calculate() {
+
+        
+        try {
+            String selectedOPV = model.getSelectedOPV();
+
+        switch(selectedOPV) {
+            case "Nichtinvertierer":
+                calculateNichtinvertierer();
+                break;
+            case "Invertierer":
+                calculateInvertierer();
+                break;
+            case "Subtrahierer":
+                calculateSubtrahierer();
+                break;
+            case "Summierer":
+                calculateSummierer();
+                break;
+            default:
+            model.setAusgangsspannung(null); 
+            model.setVerstärkung(null);
+            break;
+        }
+        } catch (Exception e) {
+            String errorMessage = "Fehler bei der Eingabe! \n " + e.getLocalizedMessage();
+            JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void calculateNichtinvertierer() {
+
+            double r_k = getWiderstände().get(1);
+            double r_e = getWiderstände().get(0);
+            double u_e = getSpannungen().get(0);
+            NichtInvertierer opv = new NichtInvertierer(r_k, r_e, u_e);
+
+            HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
+            widerstände.put("R_2", opv.getR_k());
+            widerstände.put("R_1", opv.getR_e());
+
+            model.setAusgangsspannung(opv.berechneU_a());
+            model.setVerstärkung(opv.berechneVerstärkung());
+            model.setWiderstände(widerstände);
+    }
+
+
+    
+
+    private void calculateInvertierer() {
+
+            double r_k = getWiderstände().get(1);
+            double r_e = getWiderstände().get(0);
+            double u_e = getSpannungen().get(0);
+            Invertierer opv = new Invertierer(r_k, r_e, u_e);
+
+            HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
+            widerstände.put("R_1", opv.getR_k());
+            widerstände.put("R_1", opv.getR_e());
+
+            model.setAusgangsspannung(opv.berechneU_a());
+            model.setVerstärkung(opv.berechneVerstärkung());
+            model.setWiderstände(widerstände);
+
+    }
+
+    private void calculateSubtrahierer() {
+
+        double r_k = getWiderstände().get(1);
+        double r_e1 = getWiderstände().get(0);
+        double r_e2 = getWiderstände().get(2);
+        double r_q = getWiderstände().get(3);
+        double u_e1 = getSpannungen().get(0);
+        double u_e2 = getSpannungen().get(1);
+
+        Subtrahierverstärker opv = new Subtrahierverstärker(r_k, r_q, r_e1, r_e2, u_e1, u_e2);
+
+        HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
+        widerstände.put("R_2", opv.getR_k());
+        widerstände.put("R_1", opv.getR_e()[0]);
+        widerstände.put("R_3", opv.getR_e()[1]);
+        widerstände.put("R_4", opv.getR_q());
+
+        model.setAusgangsspannung(opv.berechneU_a());
+        model.setVerstärkung(null);
+        model.setWiderstände(widerstände);
+
+    }
+
+    private void calculateSummierer() {
+        
+        double r_k = getWiderstände().get(0);
+        List<Double> r_e_List = getWiderstände();
+        r_e_List.remove(0);
+
+        double[] r_e = new double[r_e_List.size()];
+        for (int i = 0; i < r_e_List.size(); i++) {
+            r_e[i] = r_e_List.get(i);
+        }
+
+        List<Double> u_e_List = getSpannungen();
+        double[] u_e = new double[u_e_List.size()];
+        for (int i = 0; i < u_e_List.size(); i++) {
+            u_e[i] = u_e_List.get(i);
+        }
+
+        Summierverstärker opv = new Summierverstärker(r_k, r_e, u_e);
+
+        
+        HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
+        widerstände.put("R_2", opv.getR_k());
+        Widerstand[] eingangsWiderstände = opv.getR_e();
+        for (int i = 0; i < eingangsWiderstände.length; i++) {
+            widerstände.put("R_1" + (i+1), eingangsWiderstände[i]);
+        }
+
+        model.setAusgangsspannung(opv.berechneU_a());
+        model.setVerstärkung(null);
+        model.setWiderstände(widerstände);
+
     }
 
     @Override
@@ -213,6 +408,8 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         while (voltageLabels.size() > 0) {
             removeDataEntryField(voltagePanel, voltageLabels, voltageTextFields);
         }
+
+        buttonPanel.remove(addButtonPanel);
 
         switch(opv) {
             case "Invertierer":
@@ -234,13 +431,16 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
                 addDataEntryField("U_e+", voltagePanel, voltageLabels, voltageTextFields);
                 break;
             case "Summierer":
-                addDataEntryField("R_1", resistorPanel, resistorLabels, resistorTextFields);
                 addDataEntryField("R_2", resistorPanel, resistorLabels, resistorTextFields);
+                addDataEntryField("R_11", resistorPanel, resistorLabels, resistorTextFields);
+                addDataEntryField("R_12", resistorPanel, resistorLabels, resistorTextFields);
                 addDataEntryField("U_e1", voltagePanel, voltageLabels, voltageTextFields);
                 addDataEntryField("U_e2", voltagePanel, voltageLabels, voltageTextFields);
+                buttonPanel.add(addButtonPanel, 0);
                 break;
 
         }
+
         revalidate();
         repaint();
     }

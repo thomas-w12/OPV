@@ -1,13 +1,18 @@
 package GUIModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import operationsverstaerker.NichtInvertierer;
+
+import operationsverstaerker.Operationsverstärker;
+import widerstand.EReihe;
+import widerstand.Widerstand;
 
 public class Model {
 
-    private List<ModelObserver> observers;
+    private List<ModelObserver> opvObservers;
+    private List<ModelObserver> outputObservers;
 
     private Double ausgangsspannung;
     private Double verstärkung;
@@ -16,8 +21,11 @@ public class Model {
 
     private String selectedEReihe;
 
+    private HashMap<String, Widerstand> widerstände;
+
     public Model() {
-        observers = new ArrayList<>();
+        opvObservers = new ArrayList<>();
+        outputObservers = new ArrayList<>();
         ausgangsspannung = null;
         verstärkung = null;
         selectedOPV = "Nichtinvertierer";
@@ -29,7 +37,7 @@ public class Model {
 
     public void setAusgangsspannung(Double newAusgangsspannung) {
         ausgangsspannung = newAusgangsspannung;
-        notifyObservers();
+        notifyOutputObservers();
     }
 
     public Double getVerstärkung() {
@@ -38,7 +46,7 @@ public class Model {
 
     public void setVerstärkung(Double newVerstärkung) {
         verstärkung = newVerstärkung;
-        notifyObservers();
+        notifyOutputObservers();
     }
 
     public String getSelectedOPV() {
@@ -47,11 +55,15 @@ public class Model {
 
     public void setSelectedOPV(String newOPV) {
         selectedOPV = newOPV;
-        notifyObservers();
+        notifyOPVObservers();
     }
 
-    public void addObserver(ModelObserver observer) {
-        observers.add(observer);
+    public void addOPVObserver(ModelObserver observer) {
+        opvObservers.add(observer);
+    }
+
+    public void addOutputObserver(ModelObserver observer) {
+        outputObservers.add(observer);
     }
 
     public String getSelectedEReihe() {
@@ -60,44 +72,47 @@ public class Model {
 
     public void setSelectedEReihe(String newEReihe) {
         selectedEReihe = newEReihe;
+        switch (selectedEReihe) {
+            case "E12":
+                Operationsverstärker.setEReihe(EReihe.E12);
+                break;
+            case "E24":
+                Operationsverstärker.setEReihe(EReihe.E24);
+                break;
+            default:
+                Operationsverstärker.setEReihe(null);
+                break;
+
+        }
     }
 
-    public void removeObserver(ModelObserver observer) {
-        observers.remove(observer);
+    public HashMap<String, Widerstand> getWiderstände() {
+        return widerstände;
     }
 
-    private void notifyObservers() {
-        for (ModelObserver observer : observers) {
+    public void setWiderstände(HashMap<String, Widerstand> newWiderstände) {
+        widerstände = newWiderstände;
+        notifyOutputObservers();
+    }
+
+    public void removeOPVObserver(ModelObserver observer) {
+        opvObservers.remove(observer);
+    }
+
+    public void removeOutputObserver(ModelObserver observer) {
+        outputObservers.remove(observer);
+    }
+
+    private void notifyOPVObservers() {
+        for (ModelObserver observer : opvObservers) {
             observer.update();
         }
     }
 
-    public void calculate() {
-        switch(selectedOPV) {
-            case "Nichtinvertierer":
-                calculateNichtinvertierer();
-                break;
-            case "Invertierer":
-                calculateInvertierer();
-                break;
-            case "Subtrahierer":
-                calculateSubtrahierer();
-                break;
-            case "Summierer":
-                calculateSummierer();
-                break;
-            default:
-            ausgangsspannung = null;
-            verstärkung = null;
-            break;
+    private void notifyOutputObservers() {
+        for (ModelObserver observer : outputObservers) {
+            observer.update();
         }
     }
 
-    private void calculateNichtinvertierer() {
-
-        Double eingangsspannung = 
-
-        NichtInvertierer opv = new NichtInvertierer(0, 0, 0)
-    }
 }
-

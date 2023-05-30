@@ -18,7 +18,7 @@ public class ImagePanel extends JPanel implements ModelObserver {
 
     public ImagePanel(Model model) {
         this.model = model;
-        model.addObserver(this);
+        model.addOPVObserver(this);
 
         setLayout(new BorderLayout());
 

@@ -22,7 +22,7 @@ public class Invertierer extends EinfacherVerstärker {
 	 * 
 	 * @return die Verstärkung des Nichtinvertierers nach der Formel: -(R_k/R_e)
 	 */
-	double berechneVerstärkung() {
+	public double berechneVerstärkung() {
 		double verstärkung = -(getR_k().getWiderstandswert() / getR_e().getWiderstandswert());
 		return verstärkung;
 	}
