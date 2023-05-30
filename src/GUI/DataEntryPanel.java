@@ -404,20 +404,21 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
             u_e[i] = u_e_List.get(i);
         }
 
-        Summierverstärker opv = new Summierverstärker(r_k, r_e, u_e);
-
-        
-        HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
-        widerstände.put("R_2", opv.getR_k());
-        Widerstand[] eingangsWiderstände = opv.getR_e();
-        for (int i = 0; i < eingangsWiderstände.length; i++) {
-            widerstände.put("R_1" + (i+1), eingangsWiderstände[i]);
+        try {
+            Summierverstärker opv = new Summierverstärker(r_k, r_e, u_e);
+            HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
+            widerstände.put("R_2", opv.getR_k());
+            Widerstand[] eingangsWiderstände = opv.getR_e();
+            for (int i = 0; i < eingangsWiderstände.length; i++) {
+                widerstände.put("R_1" + (i+1), eingangsWiderstände[i]);
+            }
+    
+            model.setAusgangsspannung(opv.berechneU_a());
+            model.setVerstärkung(null);
+            model.setWiderstände(widerstände);
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(addButtonPanel, "Fehler bei der Berechnung!", "Fehler", ERROR);
         }
-
-        model.setAusgangsspannung(opv.berechneU_a());
-        model.setVerstärkung(null);
-        model.setWiderstände(widerstände);
-
     }
 
     @Override

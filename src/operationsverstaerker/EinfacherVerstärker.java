@@ -1,6 +1,7 @@
 package operationsverstaerker;
 
 import widerstand.Widerstand;
+import exceptions.*;
 
 /**
  * Einfacher Verstärker, Basisklasse für Invertierer und Nichtinvertierer
@@ -50,11 +51,11 @@ public abstract class EinfacherVerstärker extends Operationsverstärker {
 	 * 
 	 * @param re Eingangswiderstand(muss > 0 sein)
 	 */
-	public void setR_e(Widerstand re) {
+	public void setR_e(Widerstand re) throws FalseInputException{
 		if (re.getWiderstandswert() > 0) {
 			R_e = re;
 		} else {
-			System.out.println("R_e muss größer 0 sein");
+			throw new FalseInputException("R_e muss größer 0 sein");
 		}
 	}
 

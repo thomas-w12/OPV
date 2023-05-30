@@ -2,6 +2,7 @@ package widerstand;
 
 import java.awt.*;
 import java.util.HashMap;
+import exceptions.*;
 
 /**
  * Diese Klasse bildet einen Widerstand ab.
@@ -67,11 +68,11 @@ public class Widerstand {
 	 * 
 	 * @param wert Widerstandswert
 	 */
-	public void setWert(int wert) {
+	public void setWert(int wert) throws FalseInputException{
 		if (wert < 1000 && wert > 0) {
 			this.wert = wert;
 		} else {
-			System.out.println("Wert darf maximal 3 Stellen haben!");
+			throw new FalseInputException("Wert darf maximal 3 Stellen haben!");
 		}
 	}
 

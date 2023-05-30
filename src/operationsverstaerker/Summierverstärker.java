@@ -1,6 +1,7 @@
 package operationsverstaerker;
 
 import widerstand.Widerstand;
+import exceptions.*;
 
 /**
  * Klasse für Summierverstärker
@@ -48,12 +49,12 @@ public class Summierverstärker extends Operationsverstärker {
 	 * @param re Array der Eingangswiderstandswerte
 	 * @param ue Array der Eingangsspannungen
 	 */
-	public Summierverstärker(double rk, double[] re, double[] ue) {
+	public Summierverstärker(double rk, double[] re, double[] ue) throws FalseInputException{
 		super(rk);
 		int re_länge = re.length;
 		int ue_länge = ue.length;
 		if (re_länge != ue_länge) {
-			System.out.println("konnte nicht erzeugt werden, Anzahl Widerstände/Spannungen stimmt nicht überein");
+			throw new FalseInputException("konnte nicht erzeugt werden, Anzahl Widerstände/Spannungen stimmt nicht überein");
 		} else {
 			R_e = new Widerstand[re.length];
 			U_e = new double[ue.length];

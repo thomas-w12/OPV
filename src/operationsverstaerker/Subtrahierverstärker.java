@@ -1,6 +1,7 @@
 package operationsverstaerker;
 
 import widerstand.Widerstand;
+import exceptions.*;
 
 /**
  * Klasse für Subtrahierverstärker
@@ -17,9 +18,9 @@ public class Subtrahierverstärker extends Operationsverstärker {
 		return this.R_e;
 	}
 
-	public void setR_e(Widerstand[] R_e) {
+	public void setR_e(Widerstand[] R_e) throws FalseInputException {
 		if (R_e.length != 2) {
-			System.out.println("Anzahl Eingangswiderstände muss 2 betragen");
+			throw new FalseInputException("Anzahl Eingangswiderstände muss 2 betragen");
 		} else {
 			this.R_e = R_e;
 		}
@@ -37,9 +38,9 @@ public class Subtrahierverstärker extends Operationsverstärker {
 		return this.U_e;
 	}
 
-	public void setU_e(double[] U_e) {
+	public void setU_e(double[] U_e) throws FalseInputException{
 		if (U_e.length != 2) {
-			System.out.println("Anzahl Engangsspannungen muss 2 betragen");
+			throw new FalseInputException("Anzahl Engangsspannungen muss 2 betragen");
 		} else {
 			this.U_e = U_e;
 		}
@@ -65,12 +66,12 @@ public class Subtrahierverstärker extends Operationsverstärker {
 	 * @param re
 	 * @param ue
 	 */
-	public Subtrahierverstärker(double rk, double rq, double[] re, double[] ue) {
+	public Subtrahierverstärker(double rk, double rq, double[] re, double[] ue) throws FalseInputException{
 		super(rk);
 		R_e = new Widerstand[2];
 		U_e = new double[2];
 		if (ue.length != 2 || re.length != 2) {
-			System.out.println("Anzahl Engangsspannungen und Eingangswiderstände muss 2 betragen");
+			throw new FalseInputException("Anzahl Engangsspannungen und Eingangswiderstände muss 2 betragen");
 		} else {
 			R_e[0] = new Widerstand(re[0], getEReihe());
 			R_e[1] = new Widerstand(re[1], getEReihe());
