@@ -355,7 +355,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
             Invertierer opv = new Invertierer(r_k, r_e, u_e);
 
             HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
-            widerstände.put("R_1", opv.getR_k());
+            widerstände.put("R_2", opv.getR_k());
             widerstände.put("R_1", opv.getR_e());
 
             model.setAusgangsspannung(opv.berechneU_a());

@@ -1,6 +1,6 @@
-
-package GUI;
 import javax.swing.*;
+
+import GUI.MainFrame;
 
 public class MainGUI {
 

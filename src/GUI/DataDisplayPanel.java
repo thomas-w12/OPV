@@ -8,7 +8,6 @@ import widerstand.Widerstand;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class DataDisplayPanel extends JPanel implements ModelObserver {
 
