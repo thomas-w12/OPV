@@ -207,7 +207,6 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
 
     private void addDataEntryField(String labelString, JPanel panel, List<JLabel> labels, List<JTextField> textFields) {
         // Create a new label and text field
-        int index = labels.size() + 1;
         JLabel label = new JLabel(labelString + ":");
 
         JTextField textField = new JTextField(10);
@@ -324,7 +323,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
             break;
         }
         } catch (Exception e) {
-            String errorMessage = "Fehler bei der Eingabe! \n " + e.getLocalizedMessage();
+            String errorMessage = "Fehler bei der Eingabe! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
             JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
         }
     }

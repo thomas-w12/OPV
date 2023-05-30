@@ -2,6 +2,7 @@ package GUI;
 
 import javax.swing.*;
 import GUIModel.*;
+import exceptions.ResistorColorsNotAvailableException;
 import widerstand.Widerstand;
 
 import java.awt.*;

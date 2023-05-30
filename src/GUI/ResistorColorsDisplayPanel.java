@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import exceptions.ResistorColorsNotAvailableException;
 import widerstand.Widerstand;
 
 public class ResistorColorsDisplayPanel extends JPanel {
@@ -48,8 +49,3 @@ public class ResistorColorsDisplayPanel extends JPanel {
     }
 }
 
-class ResistorColorsNotAvailableException extends Exception {
-    public ResistorColorsNotAvailableException(String message) {
-        super(message);
-    }
-}
