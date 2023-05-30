@@ -4,11 +4,11 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import GUIModel.Model;
+import GUIModel.ViewModel;
 
 public class MainFrame extends JFrame {
 
-    private Model model;
+    private ViewModel model;
 
     private ImagePanel imagePanel;
     private DataEntryPanel dataEntryPanel;
@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         // create main Application model
-        model = new Model();
+        model = new ViewModel();
 
 
         // Set main frame properties

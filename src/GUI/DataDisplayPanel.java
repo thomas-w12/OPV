@@ -12,7 +12,7 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
-    private Model model;
+    private ViewModel model;
 
     private JPanel outputDisplayPanel;
 
@@ -27,7 +27,7 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
     private JPanel resistorDisplayPanel;
     private JScrollPane resistorsDisplayScrollPane;
 
-    public DataDisplayPanel(Model model) {
+    public DataDisplayPanel(ViewModel model) {
         this.model = model;
         model.addOutputObserver(this);
 

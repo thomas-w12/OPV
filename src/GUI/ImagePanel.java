@@ -13,11 +13,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class ImagePanel extends JPanel implements ModelObserver {
-    private Model model;
+    private ViewModel model;
 
     private ImageComponent imageComponent;
 
-    public ImagePanel(Model model) {
+    public ImagePanel(ViewModel model) {
         this.model = model;
         model.addOPVObserver(this);
 
@@ -25,7 +25,7 @@ public class ImagePanel extends JPanel implements ModelObserver {
 
         // Create the ImageComponent
         imageComponent = new ImageComponent();
-        EmptyBorder border = new EmptyBorder(10, 10, 10, 10);
+        EmptyBorder border = new EmptyBorder(30, 30, 30, 30);
         imageComponent.setBorder(border);
         add(imageComponent, BorderLayout.CENTER);
         displayImage(model.getSelectedOPV());

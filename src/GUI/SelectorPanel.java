@@ -9,21 +9,21 @@ import GUIModel.*;
 
 public class SelectorPanel extends JPanel implements ModelObserver {
 
-    private Model model;
+    private ViewModel model;
 
     private JLabel opvSelectorTitleLabel;
     private JComboBox<String> opvSelector;
     private JLabel eReiheSelectorTitleLabel;
     private JComboBox<String> eReiheSelector;
     
-    public SelectorPanel(Model model) {
+    public SelectorPanel(ViewModel model) {
         this.model = model;
         model.addOPVObserver(this);
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
         // Create the label for the opv selector title
-        opvSelectorTitleLabel = new JLabel("Wähle den Operationsverstärker:");
+        opvSelectorTitleLabel = new JLabel("Operationsverstärker:");
         add(opvSelectorTitleLabel);
 
         opvSelector = new JComboBox<>();
@@ -48,7 +48,7 @@ public class SelectorPanel extends JPanel implements ModelObserver {
         add(opvSelector);
 
         // Create the label for the eReihe selector title
-        eReiheSelectorTitleLabel = new JLabel("Wähle die E-Reihe:");
+        eReiheSelectorTitleLabel = new JLabel("E-Reihe:");
         add(eReiheSelectorTitleLabel);
 
         eReiheSelector = new JComboBox<>();

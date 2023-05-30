@@ -9,7 +9,7 @@ import operationsverstaerker.Operationsverstärker;
 import widerstand.EReihe;
 import widerstand.Widerstand;
 
-public class Model {
+public class ViewModel {
 
     private List<ModelObserver> opvObservers;
     private List<ModelObserver> outputObservers;
@@ -23,7 +23,7 @@ public class Model {
 
     private HashMap<String, Widerstand> widerstände;
 
-    public Model() {
+    public ViewModel() {
         opvObservers = new ArrayList<>();
         outputObservers = new ArrayList<>();
         ausgangsspannung = null;

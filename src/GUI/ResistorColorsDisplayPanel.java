@@ -16,7 +16,6 @@ public class ResistorColorsDisplayPanel extends JPanel {
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
 
-
     private JLabel titleLabel;
     private JPanel colorPanel;
 
@@ -40,7 +39,7 @@ public class ResistorColorsDisplayPanel extends JPanel {
                 colorPanel.add(colorRectangle);
             }
         } catch(Exception e) {
-            throw new ResistorColorsNotAvailableException("Keine Farbringe für Widerstände vorhanden.");
+            throw new ResistorColorsNotAvailableException("Da keine E-Reihe ausgewählt ist können keine Farbringe für die Widerstände erzeugt werden.");
         }
         
 
