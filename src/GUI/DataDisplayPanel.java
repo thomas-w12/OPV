@@ -6,6 +6,7 @@ import widerstand.Widerstand;
 
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class DataDisplayPanel extends JPanel implements ModelObserver {
@@ -117,12 +118,13 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
 
 
         try {
-            HashMap<String, Widerstand> widerstände = model.getWiderstände();
+            String keys[] = model.getWiderstände().keySet().toArray(new String[0]);
+            Arrays.sort(keys);
+            
+            for (String key: keys) {
 
-            for (HashMap.Entry<String, Widerstand> entry : widerstände.entrySet()) {
-                String name = entry.getKey();
-                Widerstand widerstand = entry.getValue();
-
+                String name = key;
+                Widerstand widerstand = model.getWiderstände().get(name);
                 //resistorDisplayPanel.add(new ResistorColorsDisplayPanel(name, widerstand));
 
                 // Create a panel for each resistor entry
