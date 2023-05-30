@@ -2,7 +2,6 @@ package GUI;
 
 import javax.swing.*;
 import GUIModel.*;
-import widerstand.EReihe;
 import widerstand.Widerstand;
 
 import java.awt.*;
@@ -14,6 +13,8 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
     private Model model;
+
+    private JPanel outputDisplayPanel;
 
     private JLabel outputVoltageTitleLabel;
     private JLabel amplificationTitleLabel;
@@ -30,44 +31,52 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
         this.model = model;
         model.addOutputObserver(this);
 
-        setLayout(new GridBagLayout());
+        // new BoxLayout(this, BoxLayout.Y_AXIS)
+        setLayout(new BorderLayout());
+
+        /**
+         * Create the "outputDisplayPanel" which holds the output voltage and amplification in a GridBagLayout JPanel
+         */
+
+        outputDisplayPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(5, 20, 5, 20); // Add padding between components
+        constraints.insets = new Insets(5, 0, 5, 20); // Add padding between components
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weighty = 0;
+        constraints.anchor = GridBagConstraints.NORTHWEST;
 
         // Create the label for the output voltage title
         outputVoltageTitleLabel = new JLabel("Ausgangsspannung:");
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        add(outputVoltageTitleLabel, constraints);
+        constraints.gridy = 1;
+        outputDisplayPanel.add(outputVoltageTitleLabel, constraints);
 
         // Create the label for the output voltage
         outputVoltageLabel = new JLabel("U_a = ?");
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        add(outputVoltageLabel, constraints);
+        constraints.gridy = 2;
+        outputDisplayPanel.add(outputVoltageLabel, constraints);
 
         // Create the label for the amplification title
         amplificationTitleLabel = new JLabel("Verstärkung:");
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        add(amplificationTitleLabel, constraints);
+        constraints.gridy = 3;
+        outputDisplayPanel.add(amplificationTitleLabel, constraints);
 
         // Create the label for the amplification
         amplificationLabel = new JLabel("V = ?");
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        add(amplificationLabel, constraints);
+        constraints.gridy = 4;
+        outputDisplayPanel.add(amplificationLabel, constraints);
 
-        // Create the resistor Display Panel
+        // Add extra spacing
+        constraints.gridy = 5;
+        outputDisplayPanel.add(Box.createVerticalStrut(10), constraints);
+        /*
+         * Create the resistor Display Panel
+         */
 
         resistorDisplayPanel = new JPanel();
-        //BoxLayout boxLayout = new BoxLayout(resistorDisplayPanel, BoxLayout.Y_AXIS); // Vertical layout
-        resistorDisplayPanel.setLayout(new GridBagLayout());
+        BoxLayout boxLayout = new BoxLayout(resistorDisplayPanel, BoxLayout.Y_AXIS); // Vertical layout
+        resistorDisplayPanel.setLayout(boxLayout);
 
         resistorsDisplayScrollPane = new JScrollPane(resistorDisplayPanel);
         resistorsDisplayScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -77,16 +86,12 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
         resistorView.add(resistorLabel, BorderLayout.NORTH);
         resistorView.add(resistorsDisplayScrollPane, BorderLayout.CENTER);
 
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        add(resistorView, constraints);
-
-        // Push to Top
-        constraints.gridy = 5;
-        constraints.weighty = 1;
-        add(Box.createGlue(), constraints);
-
+        
+        /**
+         * add the components to the main DataDisplayPanel
+         */
+        add(outputDisplayPanel, BorderLayout.NORTH);
+        add(resistorView, BorderLayout.CENTER);
         update();
     }
 
@@ -110,24 +115,24 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
 
         resistorDisplayPanel.removeAll();
 
+
         try {
             HashMap<String, Widerstand> widerstände = model.getWiderstände();
-
-            // Set the constraints for vertical alignment
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0; // X-coordinate in the grid
-            gbc.gridy = 0; // Y-coordinate in the grid
-            gbc.weightx = 1.0; // Horizontal weight for resizing
-            gbc.weighty = 1; // Vertical weight for resizing
-            gbc.fill = GridBagConstraints.BOTH; // Fill the cell both horizontally and vertically
-            gbc.anchor = GridBagConstraints.CENTER; // Center the component within the cell
 
             for (HashMap.Entry<String, Widerstand> entry : widerstände.entrySet()) {
                 String name = entry.getKey();
                 Widerstand widerstand = entry.getValue();
 
-                resistorDisplayPanel.add(new ResistorColorsDisplayPanel(name, widerstand), gbc);
-                gbc.gridy++;
+                //resistorDisplayPanel.add(new ResistorColorsDisplayPanel(name, widerstand));
+
+                // Create a panel for each resistor entry
+                ResistorColorsDisplayPanel resistorPanel = new ResistorColorsDisplayPanel(name, widerstand);
+
+                // Set maximum size to preferred size to avoid vertical expansion
+                resistorPanel.setMaximumSize(resistorPanel.getPreferredSize());
+
+                resistorDisplayPanel.add(resistorPanel);
+                
             }
         } catch (ResistorColorsNotAvailableException e) {
             String text = "<html><p style=\"width:100px\">" + e.getMessage() + "</p></html>";

@@ -1,6 +1,7 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import GUIModel.*;
 
@@ -24,6 +25,8 @@ public class ImagePanel extends JPanel implements ModelObserver {
 
         // Create the ImageComponent
         imageComponent = new ImageComponent();
+        EmptyBorder border = new EmptyBorder(10, 10, 10, 10);
+        imageComponent.setBorder(border);
         add(imageComponent, BorderLayout.CENTER);
         displayImage(model.getSelectedOPV());
 
