@@ -78,15 +78,15 @@ public class ViewModel {
             case "E24":
                 Operationsverstärker.setEReihe(EReihe.E24);
                 break;
-            // case "E48":
-            //     Operationsverstärker.setEReihe(EReihe.E48);
-            //     break;
-            // case "E96":
-            //     Operationsverstärker.setEReihe(EReihe.E96);
-            //     break;
-            // case "E192":
-            //     Operationsverstärker.setEReihe(EReihe.E192);
-            //     break;
+            case "E48":
+                Operationsverstärker.setEReihe(EReihe.E48);
+                break;
+            case "E96":
+                Operationsverstärker.setEReihe(EReihe.E96);
+                break;
+            case "E192":
+                Operationsverstärker.setEReihe(EReihe.E192);
+                break;
             default:
                 Operationsverstärker.setEReihe(null);
                 break;
