@@ -5,6 +5,7 @@ package widerstand;
  * Die Werte der E-Reihe werden in einem Array gespeichert.
  * Bei Erstellung werden diese auf Gültigkeit geprüft und wenn nötig in die
  * passenden Werte umgewandelt.
+ * Diese Klasse beinhaltet die E-Reihen E12 bis E192 als Konstanten.
  * 
  * @author Tobias Fritz, Thomas Wegele
  */

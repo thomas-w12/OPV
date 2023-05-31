@@ -1,25 +1,34 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.text.DecimalFormat;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import exceptions.ResistorColorsNotAvailableException;
 import widerstand.Widerstand;
 
+import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.text.DecimalFormat;
+
+/**
+ * JPanel zur Darstellung eines Widerstandes mit Farbringen
+ * 
+ * @author Thomas Wegele, Simon Prießnitz
+ */
 public class ResistorColorsDisplayPanel extends JPanel {
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
-
     private JLabel titleLabel;
     private JPanel colorPanel;
 
+    /**
+     * Konstruktor des ResistorColorDisplayPanels
+     * 
+     * @param name       Name des Widerstandes
+     * @param widerstand Widerstand, welcher dargestellt werden soll
+     * @throws ResistorColorsNotAvailableException Falls der Widerstand keine
+     *                                             E-Reihe hat, können keine
+     *                                             Farbringe
+     */
     public ResistorColorsDisplayPanel(String name, Widerstand widerstand) throws ResistorColorsNotAvailableException {
 
         setLayout(new BorderLayout());
@@ -31,7 +40,7 @@ public class ResistorColorsDisplayPanel extends JPanel {
         colorPanel = new JPanel();
 
         colorPanel.setLayout(new FlowLayout());
-        
+
         try {
             for (Color color : widerstand.getFarbringe()) {
                 JPanel colorRectangle = new JPanel();
@@ -39,13 +48,12 @@ public class ResistorColorsDisplayPanel extends JPanel {
                 colorRectangle.setBackground(color);
                 colorPanel.add(colorRectangle);
             }
-        } catch(Exception e) {
-            throw new ResistorColorsNotAvailableException("Da keine E-Reihe ausgewählt ist können keine Farbringe für die Widerstände erzeugt werden.");
+        } catch (Exception e) {
+            throw new ResistorColorsNotAvailableException(
+                    "Da keine E-Reihe ausgewählt ist können keine Farbringe für die Widerstände erzeugt werden.");
         }
-        
 
         add(colorPanel, BorderLayout.CENTER);
 
     }
 }
-

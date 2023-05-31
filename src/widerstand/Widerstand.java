@@ -1,6 +1,6 @@
 package widerstand;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.HashMap;
 import exceptions.*;
 
@@ -67,6 +67,7 @@ public class Widerstand {
 	 * darüber hinaus nur mit Potenz - NICHT FÜR EXTERNE VERWENDUNG
 	 * 
 	 * @param wert Widerstandswert
+	 * @throws FalseInputException Wenn der Wert mehr als 3 Stellen hat, wird ein Fehler geworfens
 	 */
 	public void setWert(int wert) throws FalseInputException{
 		if (wert < 1000 && wert > 0) {

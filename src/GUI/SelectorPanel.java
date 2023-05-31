@@ -1,12 +1,14 @@
 package GUI;
 
+import GUIModel.*;
+
+import javax.swing.*;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 
-import javax.swing.*;
-
-import GUIModel.*;
-
+/**
+ * Auswahlleiste der Anwendung
+ */
 public class SelectorPanel extends JPanel implements ModelObserver {
 
     private ViewModel model;
@@ -16,6 +18,11 @@ public class SelectorPanel extends JPanel implements ModelObserver {
     private JLabel eReiheSelectorTitleLabel;
     private JComboBox<String> eReiheSelector;
 
+    /**
+     * Konstruktor des SelectorPanels
+     * 
+     * @param model ViewModel der Anwendung
+     */
     public SelectorPanel(ViewModel model) {
         this.model = model;
         model.addOPVObserver(this);
@@ -51,6 +58,7 @@ public class SelectorPanel extends JPanel implements ModelObserver {
         eReiheSelectorTitleLabel = new JLabel("E-Reihe:");
         add(eReiheSelectorTitleLabel);
 
+        // add E-Reihen selector
         eReiheSelector = new JComboBox<>();
         eReiheSelector.addItem("Keine");
         eReiheSelector.addItem("E12");

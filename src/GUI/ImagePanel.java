@@ -1,22 +1,30 @@
 package GUI;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
 import GUIModel.*;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+/**
+ * Panel, welches das Bild des Operationsverstärkers darstellt
+ * 
+ * @author Thomas Wegele, Simon Prießnitz
+ */
 public class ImagePanel extends JPanel implements ModelObserver {
     private ViewModel model;
 
     private ImageComponent imageComponent;
 
+    /**
+     * Konstruktor des Image Panels
+     * 
+     * @param model ViewModel der Anwendung
+     */
     public ImagePanel(ViewModel model) {
         this.model = model;
         model.addOPVObserver(this);
@@ -28,8 +36,9 @@ public class ImagePanel extends JPanel implements ModelObserver {
         EmptyBorder border = new EmptyBorder(30, 30, 30, 30);
         imageComponent.setBorder(border);
         add(imageComponent, BorderLayout.CENTER);
-        displayImage(model.getSelectedOPV());
 
+        // Initial update of content
+        update();
     }
 
     private void displayImage(String selectedImage) {
@@ -49,15 +58,21 @@ public class ImagePanel extends JPanel implements ModelObserver {
                     image = ImageIO.read(new File("src/resources/Summierer.png"));
                     break;
                 default:
-                    // Handle default case or display an error message
+                    JOptionPane.showMessageDialog(this, "Fehler, Bild nicht verfügbar", "Fehler",
+                            JOptionPane.ERROR_MESSAGE);
                     break;
             }
         } catch (IOException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Fehler, Bild nicht verfügbar", "Fehler", JOptionPane.ERROR_MESSAGE);
         }
         imageComponent.setImage(image);
     }
 
+    /**
+     * Implementation der der update-Methode zur Aktualisieren der GUI nach
+     * Änderungen des ViewModels
+     */
     @Override
     public void update() {
         displayImage(model.getSelectedOPV());

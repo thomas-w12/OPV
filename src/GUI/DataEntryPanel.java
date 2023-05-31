@@ -1,33 +1,22 @@
 package GUI;
 
-// Imports OPV
 import GUIModel.*;
 import operationsverstaerker.*;
 import widerstand.Widerstand;
 
-// Imports Javax Swing
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.Border;
-
-// Imports Java AWT
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Das DataEntryPanel ist der Eingabebereich der Anwendung
+ * 
+ * @author Thomas Wegele, Simon Prießnitz
+ */
 public class DataEntryPanel extends JPanel implements ModelObserver {
 
     private ViewModel model;
@@ -57,10 +46,12 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
 
     private JButton calculateButton;
 
+    /**
+     * Konstruktor des DataEntryPanels
+     * 
+     * @param model ViewModel der Anwendung
+     */
     public DataEntryPanel(ViewModel model) {
-
-
-
         this.model = model;
         model.addOPVObserver(this);
 
@@ -128,10 +119,8 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         gbc.weighty = 0.5; // Equal weight for the two Borderlayouts
         entriesPanel.add(voltageBorderLayoutPanel, gbc);
 
-
         // Add the scroll pane to the panel
         add(entriesPanel, BorderLayout.CENTER);
-
 
         // Create the "Add" button
         addButton = new JButton("+");
@@ -191,15 +180,21 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         buttonPanel.add(addButtonPanel);
         buttonPanel.add(calculateButtonPanel);
 
-
         // Add the button panel to the main panel
         add(buttonPanel, BorderLayout.SOUTH);
-
 
         // Create the initial label and text field
         update();
     }
 
+    /**
+     * Eingabefeld hinzufügen
+     * 
+     * @param labelString Text des Labels
+     * @param panel       JPanel, zu dem das Eingabefeld hinzugefügt werden soll
+     * @param labels      Liste der Labels
+     * @param textFields  Liste der Textfelder
+     */
     private void addDataEntryField(String labelString, JPanel panel, List<JLabel> labels, List<JTextField> textFields) {
         // Create a new label and text field
         JLabel label = new JLabel(labelString + ":");
@@ -218,12 +213,14 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         constraints.gridx = 1;
         constraints.anchor = GridBagConstraints.EAST;
         constraints.weightx = 0.0;
-   
+
         entryPanel.add(textField, constraints);
         Border emptyBorder = BorderFactory.createEmptyBorder(5, 0, 5, 0);
         entryPanel.setBorder(emptyBorder);
-        entryPanel.setMaximumSize(new Dimension((int) (entryPanel.getPreferredSize().width*1.1), entryPanel.getPreferredSize().height));
+        entryPanel.setMaximumSize(
+                new Dimension((int) (entryPanel.getPreferredSize().width * 1.1), entryPanel.getPreferredSize().height));
 
+        // Add the entry to the panel
         panel.add(entryPanel);
 
         // Store the label and text field references in lists
@@ -231,6 +228,13 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         textFields.add(textField);
     }
 
+    /**
+     * Eingabefeld entfernen
+     * 
+     * @param panel      JPanel, aus dem das Eingabefeld entfernt werden soll
+     * @param labels     Liste der Labels
+     * @param textFields Liste der Textfelder
+     */
     private void removeDataEntryField(JPanel panel, List<JLabel> labels, List<JTextField> textFields) {
         // Remove the last label and text field from the panel
         int index = labels.size() - 1;
@@ -243,6 +247,11 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         textFields.remove(index);
     }
 
+    /**
+     * Methode wandelt Eingabe der Widerstände um
+     * 
+     * @return Liste der Widerstandswerte
+     */
     private List<Double> getWiderstände() {
         List<Double> entries = new ArrayList<>();
         for (JTextField textField : resistorTextFields) {
@@ -251,12 +260,18 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
                 double value = Double.parseDouble(text);
                 entries.add(value);
             } catch (NumberFormatException e) {
-                // Handle invalid input if necessary
+                String errorMessage = "Fehler bei der Eingabe der Widerstände! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
+                JOptionPane.showMessageDialog(null, errorMessage, "Eingabefehler", JOptionPane.ERROR_MESSAGE);
             }
         }
         return entries;
     }
 
+    /**
+     * Methode wandelt Eingabe der Spannungen um
+     * 
+     * @return Liste der Spannungen
+     */
     private List<Double> getSpannungen() {
         List<Double> entries = new ArrayList<>();
         for (JTextField textField : voltageTextFields) {
@@ -265,142 +280,142 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
                 double value = Double.parseDouble(text);
                 entries.add(value);
             } catch (NumberFormatException e) {
-                // Handle invalid input if necessary
+                String errorMessage = "Fehler bei der Eingabe der Spannungen! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
+                JOptionPane.showMessageDialog(null, errorMessage, "Eingabefehler", JOptionPane.ERROR_MESSAGE);
             }
         }
         return entries;
     }
 
+    /**
+     * Methode zur Berechnung der Ausgangsspannung und evtl. Verstärkung
+     */
     private void calculate() {
-
-        
         try {
             String selectedOPV = model.getSelectedOPV();
 
-        switch(selectedOPV) {
-            case "Nichtinvertierer":
-                calculateNichtinvertierer();
-                break;
-            case "Invertierer":
-                calculateInvertierer();
-                break;
-            case "Subtrahierer":
-                calculateSubtrahierer();
-                break;
-            case "Summierer":
-                calculateSummierer();
-                break;
-            default:
-            model.setAusgangsspannung(null); 
-            model.setVerstärkung(null);
-            break;
-        }
+            switch (selectedOPV) {
+                case "Nichtinvertierer":
+                    calculateNichtinvertierer();
+                    break;
+                case "Invertierer":
+                    calculateInvertierer();
+                    break;
+                case "Subtrahierer":
+                    calculateSubtrahierer();
+                    break;
+                case "Summierer":
+                    calculateSummierer();
+                    break;
+                default:
+                    model.setAusgangsspannung(null);
+                    model.setVerstärkung(null);
+                    break;
+            }
+        } catch (NullPointerException e0) {
+            String errorMessage = "Fehler bei der Eingabe! \nDie Anzahl der Eingangsspannungen bzw. Widerstände stimmt nicht. \nÜberprüfen Sie, ob alle Felder einen Wert haben \nund versuchen sie es erneut";
+            JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-            String errorMessage = "Fehler bei der Eingabe! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
+            String errorMessage = "Unbekannter EingabeFehler";
             JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    /**
+     * Methode zur Berechnung des Nichtinvertierers
+     */
     private void calculateNichtinvertierer() {
-
-            double r_k = getWiderstände().get(1);
-            double r_e = getWiderstände().get(0);
-            double u_e = getSpannungen().get(0);
-            NichtInvertierer opv = new NichtInvertierer(r_k, r_e, u_e);
-
-            HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
-            widerstände.put("R_2", opv.getR_k());
-            widerstände.put("R_1", opv.getR_e());
-
-            model.setAusgangsspannung(opv.berechneU_a());
-            model.setVerstärkung(opv.berechneVerstärkung());
-            model.setWiderstände(widerstände);
+        double r_k = getWiderstände().get(1);
+        double r_e = getWiderstände().get(0);
+        double u_e = getSpannungen().get(0);
+        NichtInvertierer opv = new NichtInvertierer(r_k, r_e, u_e);
+        HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
+        widerstände.put("R_2", opv.getR_k());
+        widerstände.put("R_1", opv.getR_e());
+        model.setAusgangsspannung(opv.berechneU_a());
+        model.setVerstärkung(opv.berechneVerstärkung());
+        model.setWiderstände(widerstände);
     }
 
-
-    
-
+    /**
+     * Methode zur Berechnung des Invertierers
+     */
     private void calculateInvertierer() {
-
-            double r_k = getWiderstände().get(1);
-            double r_e = getWiderstände().get(0);
-            double u_e = getSpannungen().get(0);
-            Invertierer opv = new Invertierer(r_k, r_e, u_e);
-
-            HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
-            widerstände.put("R_2", opv.getR_k());
-            widerstände.put("R_1", opv.getR_e());
-
-            model.setAusgangsspannung(opv.berechneU_a());
-            model.setVerstärkung(opv.berechneVerstärkung());
-            model.setWiderstände(widerstände);
-
+        double r_k = getWiderstände().get(1);
+        double r_e = getWiderstände().get(0);
+        double u_e = getSpannungen().get(0);
+        Invertierer opv = new Invertierer(r_k, r_e, u_e);
+        HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
+        widerstände.put("R_2", opv.getR_k());
+        widerstände.put("R_1", opv.getR_e());
+        model.setAusgangsspannung(opv.berechneU_a());
+        model.setVerstärkung(opv.berechneVerstärkung());
+        model.setWiderstände(widerstände);
     }
 
+    /**
+     * Methode zur Berechnung des Subtrahierers
+     */
     private void calculateSubtrahierer() {
-
         double r_k = getWiderstände().get(1);
         double r_e1 = getWiderstände().get(0);
         double r_e2 = getWiderstände().get(2);
         double r_q = getWiderstände().get(3);
         double u_e1 = getSpannungen().get(0);
         double u_e2 = getSpannungen().get(1);
-
         Subtrahierverstärker opv = new Subtrahierverstärker(r_k, r_q, r_e1, r_e2, u_e1, u_e2);
-
         HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
         widerstände.put("R_2", opv.getR_k());
         widerstände.put("R_1", opv.getR_e()[0]);
         widerstände.put("R_3", opv.getR_e()[1]);
         widerstände.put("R_4", opv.getR_q());
-
         model.setAusgangsspannung(opv.berechneU_a());
         model.setVerstärkung(null);
         model.setWiderstände(widerstände);
-
     }
 
+    /**
+     * Methode zur Berechnung des Summierers
+     */
     private void calculateSummierer() {
-        
         double r_k = getWiderstände().get(0);
         List<Double> r_e_List = getWiderstände();
         r_e_List.remove(0);
-
         double[] r_e = new double[r_e_List.size()];
         for (int i = 0; i < r_e_List.size(); i++) {
             r_e[i] = r_e_List.get(i);
         }
-
         List<Double> u_e_List = getSpannungen();
         double[] u_e = new double[u_e_List.size()];
         for (int i = 0; i < u_e_List.size(); i++) {
             u_e[i] = u_e_List.get(i);
         }
-
         try {
             Summierverstärker opv = new Summierverstärker(r_k, r_e, u_e);
             HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
             widerstände.put("R_2", opv.getR_k());
             Widerstand[] eingangsWiderstände = opv.getR_e();
             for (int i = 0; i < eingangsWiderstände.length; i++) {
-                widerstände.put("R_1" + (i+1), eingangsWiderstände[i]);
+                widerstände.put("R_1" + (i + 1), eingangsWiderstände[i]);
             }
-    
             model.setAusgangsspannung(opv.berechneU_a());
             model.setVerstärkung(null);
             model.setWiderstände(widerstände);
-        } catch(Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(addButtonPanel, "Fehler bei der Berechnung!", "Fehler", ERROR);
         }
     }
 
+    /**
+     * Implementation der der update-Methode zur Aktualisieren der GUI nach
+     * Änderungen des ViewModels
+     */
     @Override
     public void update() {
 
         // Get the selected opv
         String opv = model.getSelectedOPV();
 
-    
         // Remove all data entry fields
         while (resistorLabels.size() > 0) {
             removeDataEntryField(resistorPanel, resistorLabels, resistorTextFields);
@@ -411,7 +426,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
 
         buttonPanel.remove(addButtonPanel);
 
-        switch(opv) {
+        switch (opv) {
             case "Invertierer":
                 addDataEntryField("R_1", resistorPanel, resistorLabels, resistorTextFields);
                 addDataEntryField("R_2", resistorPanel, resistorLabels, resistorTextFields);

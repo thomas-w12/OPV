@@ -1,11 +1,18 @@
 package GUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Klasse eines Bildes, welches in der Größe verändert werden kann und das
+ * Seitenverhältnis beibehält
+ * 
+ * @author Thomas Wegele, Simon Prießnitz
+ */
 public class ImageComponent extends JComponent {
-    private BufferedImage image;
 
+    private BufferedImage image;
 
     public ImageComponent() {
     }
@@ -45,6 +52,5 @@ public class ImageComponent extends JComponent {
             g.drawImage(image, xOffset, yOffset, scaledWidth, scaledHeight, null);
         }
     }
-
 
 }

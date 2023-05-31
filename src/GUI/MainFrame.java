@@ -1,11 +1,15 @@
 package GUI;
 
-import java.awt.*;
-
-import javax.swing.*;
-
 import GUIModel.ViewModel;
 
+import java.awt.*;
+import javax.swing.*;
+
+/**
+ * Hauptfenster der Anwendung
+ * 
+ * @author Thomas Wegele, Simon Prießnitz
+ */
 public class MainFrame extends JFrame {
 
     private ViewModel model;
@@ -15,11 +19,13 @@ public class MainFrame extends JFrame {
     private DataDisplayPanel dataDisplayPanel;
     private SelectorPanel selectorPanel;
 
-
+    /**
+     * Konstruktor des MainFrames, dieser erzeugt das ViewModel, welches während der
+     * Lebensdauer dieses Fensters aktiv ist
+     */
     public MainFrame() {
         // create main Application model
         model = new ViewModel();
-
 
         // Set main frame properties
         setTitle("Operationsverstärker");
@@ -27,14 +33,13 @@ public class MainFrame extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null); // Center the frame on the screen
         setLayout(new BorderLayout());
-        
+
         /**
-         * Create and configure UI components 
-         **/ 
+         * Create and configure UI components
+         **/
 
         // Create the DataEntryPanel
         dataEntryPanel = new DataEntryPanel(model);
-
 
         // Create the DataDisplayPanel
         dataDisplayPanel = new DataDisplayPanel(model);
@@ -50,8 +55,5 @@ public class MainFrame extends JFrame {
         getContentPane().add(dataDisplayPanel, BorderLayout.EAST);
         getContentPane().add(selectorPanel, BorderLayout.NORTH);
         getContentPane().add(imagePanel, BorderLayout.CENTER);
-
-
-
     }
 }

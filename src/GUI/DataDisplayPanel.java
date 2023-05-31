@@ -1,14 +1,19 @@
 package GUI;
 
-import javax.swing.*;
 import GUIModel.*;
 import exceptions.ResistorColorsNotAvailableException;
 import widerstand.Widerstand;
 
+import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
+/**
+ * Das DataDisplayPanel stellt den Eingabebereich der Anwendung dar.
+ * 
+ * @author Thomas Wegele, Simon Prießnitz
+ */
 public class DataDisplayPanel extends JPanel implements ModelObserver {
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
@@ -28,6 +33,11 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
     private JPanel resistorDisplayPanel;
     private JScrollPane resistorsDisplayScrollPane;
 
+    /**
+     * Konstruktor des DataDisplayPanels
+     * 
+     * @param model ViewModel der Anwendung
+     */
     public DataDisplayPanel(ViewModel model) {
         this.model = model;
         model.addOutputObserver(this);
@@ -36,9 +46,9 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
         setLayout(new BorderLayout());
 
         /**
-         * Create the "outputDisplayPanel" which holds the output voltage and amplification in a GridBagLayout JPanel
+         * Create the "outputDisplayPanel" which holds the output voltage and
+         * amplification in a GridBagLayout JPanel
          */
-
         outputDisplayPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -71,34 +81,38 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
         // Add extra spacing
         constraints.gridy = 5;
         outputDisplayPanel.add(Box.createVerticalStrut(10), constraints);
-        /*
-         * Create the resistor Display Panel
-         */
 
+        // Create the resistor Display Panel in a BoxLayout
         resistorDisplayPanel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(resistorDisplayPanel, BoxLayout.Y_AXIS); // Vertical layout
         resistorDisplayPanel.setLayout(boxLayout);
 
+        // Create the ScrollPane for the resistors
         resistorsDisplayScrollPane = new JScrollPane(resistorDisplayPanel);
         resistorsDisplayScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
+        // Put the label and ScrollPane in a new BorderLayout Panel
         JPanel resistorView = new JPanel(new BorderLayout());
         JLabel resistorLabel = new JLabel("Widerstände:");
         resistorView.add(resistorLabel, BorderLayout.NORTH);
         resistorView.add(resistorsDisplayScrollPane, BorderLayout.CENTER);
 
-        
-        /**
-         * add the components to the main DataDisplayPanel
-         */
+        // add the components to the main DataDisplayPanel
         add(outputDisplayPanel, BorderLayout.NORTH);
         add(resistorView, BorderLayout.CENTER);
+
+        // Initial update of the content displayed
         update();
     }
 
+    /**
+     * Implementation der der update-Methode zur Aktualisieren der GUI nach
+     * Änderungen des ViewModels
+     */
     @Override
     public void update() {
 
+        // Label des Ausgangsspannung und Verstärkung ändern
         if (model.getAusgangsspannung() == null) {
             outputVoltageString = "U_a = ?";
         } else {
@@ -114,33 +128,28 @@ public class DataDisplayPanel extends JPanel implements ModelObserver {
         outputVoltageLabel.setText(outputVoltageString);
         amplificationLabel.setText(amplificationString);
 
+        // gewählte Widerstände anzeigen
         resistorDisplayPanel.removeAll();
-
 
         try {
             String keys[] = model.getWiderstände().keySet().toArray(new String[0]);
             Arrays.sort(keys);
-            
-            for (String key: keys) {
 
+            for (String key : keys) {
                 String name = key;
                 Widerstand widerstand = model.getWiderstände().get(name);
-                //resistorDisplayPanel.add(new ResistorColorsDisplayPanel(name, widerstand));
 
                 // Create a panel for each resistor entry
                 ResistorColorsDisplayPanel resistorPanel = new ResistorColorsDisplayPanel(name, widerstand);
 
                 // Set maximum size to preferred size to avoid vertical expansion
                 resistorPanel.setMaximumSize(resistorPanel.getPreferredSize());
-
                 resistorDisplayPanel.add(resistorPanel);
-                
             }
         } catch (ResistorColorsNotAvailableException e) {
             String text = "<html><p style=\"width:100px\">" + e.getMessage() + "</p></html>";
             resistorDisplayPanel.add(new JLabel(text));
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             String text = "<html><p style=\"width:100px\">" + "Es sind noch keine Widerstände zum Anzeigen vorhanden."
                     + "</p></html>";
             resistorDisplayPanel.add(new JLabel(text));
