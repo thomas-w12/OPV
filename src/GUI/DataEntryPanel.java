@@ -1,6 +1,7 @@
 package GUI;
 
 import GUIModel.*;
+import exceptions.FalseInputException;
 import operationsverstaerker.*;
 import widerstand.Widerstand;
 
@@ -252,17 +253,12 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
      * 
      * @return Liste der Widerstandswerte
      */
-    private List<Double> getWiderstände() {
+    private List<Double> getWiderstände() throws NumberFormatException {
         List<Double> entries = new ArrayList<>();
         for (JTextField textField : resistorTextFields) {
             String text = textField.getText();
-            try {
-                double value = Double.parseDouble(text);
-                entries.add(value);
-            } catch (NumberFormatException e) {
-                String errorMessage = "Fehler bei der Eingabe der Widerstände! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
-                JOptionPane.showMessageDialog(null, errorMessage, "Eingabefehler", JOptionPane.ERROR_MESSAGE);
-            }
+            double value = Double.parseDouble(text);
+            entries.add(value);
         }
         return entries;
     }
@@ -272,17 +268,12 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
      * 
      * @return Liste der Spannungen
      */
-    private List<Double> getSpannungen() {
+    private List<Double> getSpannungen() throws NumberFormatException {
         List<Double> entries = new ArrayList<>();
         for (JTextField textField : voltageTextFields) {
             String text = textField.getText();
-            try {
-                double value = Double.parseDouble(text);
-                entries.add(value);
-            } catch (NumberFormatException e) {
-                String errorMessage = "Fehler bei der Eingabe der Spannungen! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
-                JOptionPane.showMessageDialog(null, errorMessage, "Eingabefehler", JOptionPane.ERROR_MESSAGE);
-            }
+            double value = Double.parseDouble(text);
+            entries.add(value);
         }
         return entries;
     }
@@ -312,10 +303,19 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
                     model.setVerstärkung(null);
                     break;
             }
-        } catch (NullPointerException e0) {
+        } catch (NullPointerException | IndexOutOfBoundsException | FalseInputException e0) {
+            // Diese Fehler sollten nie auftreten, da die GUI verhindert, dass eine
+            // unterschiedliche Länge an Widerständen und Spannungen auftritt.
             String errorMessage = "Fehler bei der Eingabe! \nDie Anzahl der Eingangsspannungen bzw. Widerstände stimmt nicht. \nÜberprüfen Sie, ob alle Felder einen Wert haben \nund versuchen sie es erneut";
             JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
+            return;
+        } catch (NumberFormatException e1) {
+            // Dieser Fehler kann auftreten, wenn der Benutzer z.B. Buchstaben in ein Feld
+            // eingibt.
+            String errorMessage = "Fehler bei der Eingabe! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
+            JOptionPane.showMessageDialog(null, errorMessage, "Eingabefehler", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
+            // Falls andere Fehler auftreten
             String errorMessage = "Unbekannter EingabeFehler";
             JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
         }
@@ -377,7 +377,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
     /**
      * Methode zur Berechnung des Summierers
      */
-    private void calculateSummierer() {
+    private void calculateSummierer() throws FalseInputException {
         double r_k = getWiderstände().get(0);
         List<Double> r_e_List = getWiderstände();
         r_e_List.remove(0);
@@ -390,20 +390,18 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         for (int i = 0; i < u_e_List.size(); i++) {
             u_e[i] = u_e_List.get(i);
         }
-        try {
-            Summierverstärker opv = new Summierverstärker(r_k, r_e, u_e);
-            HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
-            widerstände.put("R_2", opv.getR_k());
-            Widerstand[] eingangsWiderstände = opv.getR_e();
-            for (int i = 0; i < eingangsWiderstände.length; i++) {
-                widerstände.put("R_1" + (i + 1), eingangsWiderstände[i]);
-            }
-            model.setAusgangsspannung(opv.berechneU_a());
-            model.setVerstärkung(null);
-            model.setWiderstände(widerstände);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(addButtonPanel, "Fehler bei der Berechnung!", "Fehler", ERROR);
+
+        Summierverstärker opv = new Summierverstärker(r_k, r_e, u_e);
+        HashMap<String, Widerstand> widerstände = new HashMap<String, Widerstand>();
+        widerstände.put("R_2", opv.getR_k());
+        Widerstand[] eingangsWiderstände = opv.getR_e();
+        for (int i = 0; i < eingangsWiderstände.length; i++) {
+            widerstände.put("R_1" + (i + 1), eingangsWiderstände[i]);
         }
+        model.setAusgangsspannung(opv.berechneU_a());
+        model.setVerstärkung(null);
+        model.setWiderstände(widerstände);
+
     }
 
     /**
