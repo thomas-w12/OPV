@@ -1,16 +1,27 @@
 package GUI;
 
-import javax.swing.*;
-
-import GUIModel.ViewModel;
-import GUIModel.ModelObserver;
-import operationsverstaerker.Invertierer;
-import operationsverstaerker.NichtInvertierer;
-import operationsverstaerker.Subtrahierverstärker;
-import operationsverstaerker.Summierverstärker;
+// Imports OPV
+import GUIModel.*;
+import operationsverstaerker.*;
 import widerstand.Widerstand;
 
-import java.awt.*;
+// Imports Javax Swing
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+
+// Imports Java AWT
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -98,17 +109,6 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         gbc.fill = GridBagConstraints.BOTH; // Fill the cell both horizontally and vertically
         gbc.anchor = GridBagConstraints.CENTER; // Center the component within the cell
 
-
-
-
-        // entriesPanel.add(resistorLabel, gbc);
-        // gbc.gridy = 1;
-        // entriesPanel.add(resistorScrollPane, gbc);
-        // gbc.gridy = 2;
-        // entriesPanel.add(voltageLabel, gbc);
-        // gbc.gridy = 3;
-        // entriesPanel.add(voltageScrollPane, gbc);
-
         resistorBorderLayoutPanel = new JPanel(new BorderLayout());
         resistorBorderLayoutPanel.add(resistorLabel, BorderLayout.NORTH);
         resistorBorderLayoutPanel.add(resistorScrollPane, BorderLayout.CENTER);
@@ -128,11 +128,6 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         gbc.weighty = 0.5; // Equal weight for the two Borderlayouts
         entriesPanel.add(voltageBorderLayoutPanel, gbc);
 
-
-
-        // Wrap the entries panel in a scroll pane
-        // JScrollPane scrollPane = new JScrollPane(entriesPanel);
-        // scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         // Add the scroll pane to the panel
         add(entriesPanel, BorderLayout.CENTER);
@@ -211,10 +206,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
 
         JTextField textField = new JTextField(10);
 
-        //textField.setMaximumSize(new Dimension((int) (textField.getPreferredSize().getWidth()*0.5), textField.getPreferredSize().height));
-        //textField.setMaximumSize(new Dimension(200, 50));
         JPanel entryPanel = new JPanel(new GridBagLayout());
-
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
@@ -226,31 +218,12 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
         constraints.gridx = 1;
         constraints.anchor = GridBagConstraints.EAST;
         constraints.weightx = 0.0;
-
    
         entryPanel.add(textField, constraints);
-
+        Border emptyBorder = BorderFactory.createEmptyBorder(5, 0, 5, 0);
+        entryPanel.setBorder(emptyBorder);
         entryPanel.setMaximumSize(new Dimension((int) (entryPanel.getPreferredSize().width*1.1), entryPanel.getPreferredSize().height));
 
-        
-
-        // Add the label and text field to the panel
-        // GridBagConstraints labelConstraints = new GridBagConstraints();
-        // labelConstraints.gridx = 0;
-        // labelConstraints.gridy = index;
-        // labelConstraints.anchor = GridBagConstraints.NORTH;
-        // labelConstraints.insets = new Insets(5, 5, 0, 5);
-        // panel.add(label, labelConstraints, index-1);
-
-        // GridBagConstraints textFieldConstraints = new GridBagConstraints();
-        // textFieldConstraints.gridx = 1;
-        // textFieldConstraints.gridy = index;
-        // textFieldConstraints.anchor = GridBagConstraints.NORTH;
-        // textFieldConstraints.insets = new Insets(5, 0, 0, 5);
-        // panel.add(textField, textFieldConstraints, index-1);
-
-        //Dimension size = new Dimension((int) (panel.getSize().width*1), entryPanel.getPreferredSize().height);
-        //entryPanel.setMaximumSize(entryPanel.getPreferredSize());
         panel.add(entryPanel);
 
         // Store the label and text field references in lists
