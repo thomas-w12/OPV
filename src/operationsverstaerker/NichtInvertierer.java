@@ -36,7 +36,7 @@ public class NichtInvertierer extends EinfacherVerstärker {
 	 * @param rk Kopplungswiderstand
 	 * @param re Eingangswiderstand
 	 * @param ue Eingangsspannung
-	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner gleich 0 ist
 	 */
 	public NichtInvertierer(double rk, double re, double ue) throws FalseInputException {
 		super(rk, re, ue);
@@ -45,9 +45,8 @@ public class NichtInvertierer extends EinfacherVerstärker {
 	/**
 	 * Erstellt ein Objekt der Klasse NichtInvertierer mit vorgegebenen Attributen
 	 * (R_k=10000 R_e=5000 U_e=10)
-	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
 	 */
-	public NichtInvertierer() throws FalseInputException {
+	public NichtInvertierer() {
 		super();
 	}
 

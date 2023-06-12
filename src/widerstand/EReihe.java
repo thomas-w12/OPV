@@ -1,5 +1,7 @@
 package widerstand;
 
+import exceptions.FalseInputException;
+
 /**
  * Diese Klasse stellt eine E-Reihe dar.
  * Die Werte der E-Reihe werden in einem Array gespeichert.
@@ -84,10 +86,11 @@ public class EReihe {
 	 * @param widerstand: Widerstandswert, zu dem der passende Wert aus der EReihe
 	 *                    gesucht werden soll.
 	 * @return passender Widerstandswert aus der EReihe
+	 * @throws FalseInputException Fehler, wenn Widerstandwert kleiner gleich 0 ist
 	 */
-	public double widerstandWaehlen(double widerstand) {
+	public double widerstandWaehlen(double widerstand) throws FalseInputException {
 		if (widerstand <= 0) {
-			widerstand = 1;
+			throw new FalseInputException("Widerstandswert ist kleiner gleich 0!");
 		}
 		double faktor = this.faktorFinden(widerstand);
 		double zehnerfaktor = widerstand / faktor;

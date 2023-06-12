@@ -310,13 +310,13 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
             JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
             return;
         } catch (FalseInputException e1) {
-            String errorMessage = "Fehler bei der Eingabe! \nDie Widerstände dürfen nicht negativ sein! Bitte erneut versuchen.";
+            String errorMessage = "Fehler bei der Eingabe! \nDie Widerstände dürfen nicht kleiner gleich 0 sein! Bitte erneut versuchen.";
             JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
             return;
         } catch (NumberFormatException e2) {
             // Dieser Fehler kann auftreten, wenn der Benutzer z.B. Buchstaben in ein Feld
             // eingibt.
-            String errorMessage = "Fehler bei der Eingabe! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
+            String errorMessage = "Fehler bei der Eingabe! \nÜberprüfen Sie, dass alle Felder gefüllt sind. \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
             JOptionPane.showMessageDialog(null, errorMessage, "Eingabefehler", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             // Falls andere Fehler auftreten
