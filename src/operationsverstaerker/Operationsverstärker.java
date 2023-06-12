@@ -1,5 +1,6 @@
 package operationsverstaerker;
 
+import exceptions.FalseInputException;
 import widerstand.EReihe;
 import widerstand.Widerstand;
 
@@ -33,7 +34,7 @@ public abstract class Operationsverstärker {
 	}
 
 
-	public Operationsverstärker(double rk) {
+	public Operationsverstärker(double rk) throws FalseInputException {
 		this.R_k = new Widerstand(rk, ereihe);
 	}
 

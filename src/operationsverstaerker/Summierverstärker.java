@@ -74,7 +74,7 @@ public class Summierverstärker extends Operationsverstärker {
 	 * @param ue1 erste Eingangsspannung
 	 * @param ue2 zweite Eingangsspannung
 	 */
-	public Summierverstärker(double rk, double re1, double re2, double ue1, double ue2) {
+	public Summierverstärker(double rk, double re1, double re2, double ue1, double ue2) throws FalseInputException {
 		super(rk);
 		R_e = new Widerstand[2];
 		U_e = new double[2];

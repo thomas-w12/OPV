@@ -303,13 +303,17 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
                     model.setVerstärkung(null);
                     break;
             }
-        } catch (NullPointerException | IndexOutOfBoundsException | FalseInputException e0) {
+        } catch (NullPointerException | IndexOutOfBoundsException e0) {
             // Diese Fehler sollten nie auftreten, da die GUI verhindert, dass eine
             // unterschiedliche Länge an Widerständen und Spannungen auftritt.
             String errorMessage = "Fehler bei der Eingabe! \nDie Anzahl der Eingangsspannungen bzw. Widerstände stimmt nicht. \nÜberprüfen Sie, ob alle Felder einen Wert haben \nund versuchen sie es erneut";
             JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
             return;
-        } catch (NumberFormatException e1) {
+        } catch (FalseInputException e1) {
+            String errorMessage = "Fehler bei der Eingabe! \nDie Widerstände dürfen nicht negativ sein! Bitte erneut versuchen.";
+            JOptionPane.showMessageDialog(null, errorMessage, "Fehler", JOptionPane.ERROR_MESSAGE);
+            return;
+        } catch (NumberFormatException e2) {
             // Dieser Fehler kann auftreten, wenn der Benutzer z.B. Buchstaben in ein Feld
             // eingibt.
             String errorMessage = "Fehler bei der Eingabe! \nEs sind nur Zahlen zulässig. \nKommazahlen müssen mit einem Dezimalpunkt geschrieben werden, ein Komma ist nicht zulässig.";
@@ -324,7 +328,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
     /**
      * Methode zur Berechnung des Nichtinvertierers
      */
-    private void calculateNichtinvertierer() {
+    private void calculateNichtinvertierer() throws FalseInputException {
         double r_k = getWiderstände().get(1);
         double r_e = getWiderstände().get(0);
         double u_e = getSpannungen().get(0);
@@ -340,7 +344,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
     /**
      * Methode zur Berechnung des Invertierers
      */
-    private void calculateInvertierer() {
+    private void calculateInvertierer() throws FalseInputException {
         double r_k = getWiderstände().get(1);
         double r_e = getWiderstände().get(0);
         double u_e = getSpannungen().get(0);
@@ -356,7 +360,7 @@ public class DataEntryPanel extends JPanel implements ModelObserver {
     /**
      * Methode zur Berechnung des Subtrahierers
      */
-    private void calculateSubtrahierer() {
+    private void calculateSubtrahierer() throws FalseInputException {
         double r_k = getWiderstände().get(1);
         double r_e1 = getWiderstände().get(0);
         double r_e2 = getWiderstände().get(2);

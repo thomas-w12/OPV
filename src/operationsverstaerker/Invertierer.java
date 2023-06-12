@@ -1,5 +1,7 @@
 package operationsverstaerker;
 
+import exceptions.FalseInputException;
+
 /**
  * Klasse für Invertierer
  * 
@@ -33,17 +35,19 @@ public class Invertierer extends EinfacherVerstärker {
 	 * @param rk Kopplungswiderstandswert
 	 * @param re Eingangswiderstandwert
 	 * @param ue Eingangsspannung
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
 	 */
-	public Invertierer(double rk, double re, double ue) {
+	public Invertierer(double rk, double re, double ue) throws FalseInputException {
 		super(rk, re, ue);
 	}
 
 	/**
 	 * Erstellt ein Objekt der Klasse Invertierer mit vorgegebenen Attributen
 	 * (R_k=10000 R_e=5000 U_e=10)
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
 	 */
-	public Invertierer() {
-		super(10000, 5000, 10.0);
+	public Invertierer() throws FalseInputException {
+		super();
 	}
 
 }

@@ -59,13 +59,28 @@ public abstract class EinfacherVerstärker extends Operationsverstärker {
 		}
 	}
 
-	public EinfacherVerstärker(double rk, double re, double ue) {
+	/**
+	 * Basiskonstruktor zum erstellen eines einfachen Verstärkers durch den Nutzer
+	 * 
+	 * @param rk Kopplungswiderstandswert
+	 * @param re Eingangswiderstandwert
+	 * @param ue Eingangsspannung
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
+	 */
+	public EinfacherVerstärker(double rk, double re, double ue) throws FalseInputException {
 		super(rk);
 		U_e = ue;
 		R_e = new Widerstand(re, getEReihe());
 	}
 
-	public EinfacherVerstärker() {
-
+	/**
+	 * Basiskonstruktor zum Erstellen von einfachen Verstärkern mit vorgegebenen Attributen
+	 * (R_k=10000 R_e=5000 U_e=10)
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
+	 */
+	public EinfacherVerstärker() throws FalseInputException {
+		super(10000);
+		U_e = 10;
+		R_e = new Widerstand(5000, getEReihe());
 	}
 }

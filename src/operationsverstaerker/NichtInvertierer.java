@@ -1,5 +1,7 @@
 package operationsverstaerker;
 
+import exceptions.FalseInputException;
+
 /**
  * Klasse für Nichtinvertierer
  * 
@@ -34,17 +36,19 @@ public class NichtInvertierer extends EinfacherVerstärker {
 	 * @param rk Kopplungswiderstand
 	 * @param re Eingangswiderstand
 	 * @param ue Eingangsspannung
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
 	 */
-	public NichtInvertierer(double rk, double re, double ue) {
+	public NichtInvertierer(double rk, double re, double ue) throws FalseInputException {
 		super(rk, re, ue);
 	}
 
 	/**
 	 * Erstellt ein Objekt der Klasse NichtInvertierer mit vorgegebenen Attributen
 	 * (R_k=10000 R_e=5000 U_e=10)
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
 	 */
-	public NichtInvertierer() {
-		super(10000, 5000, 10);
+	public NichtInvertierer() throws FalseInputException {
+		super();
 	}
 
 }

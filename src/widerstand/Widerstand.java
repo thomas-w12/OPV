@@ -145,12 +145,14 @@ public class Widerstand {
 	 * Methode zum Setzen des Widerstandswertes, nicht zur externen Verwendung
 	 * 
 	 * @param widerstandswert Widerstandswert als Double
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
 	 */
-	private void setWiderstandswert(double widerstandswert) {
+	private void setWiderstandswert(double widerstandswert) throws FalseInputException {
 		double temp;
 		int tempPotenz = 0;
 		if (widerstandswert <= 0) {
-			temp = 1;
+			throw new FalseInputException("Widerstandswert darf nicht 0 oder kleiner sein!");
+			// temp = 1;
 		} else {
 			temp = widerstandswert;
 		}
@@ -195,8 +197,9 @@ public class Widerstand {
 	 * Konstruktor zum Erstellen eines Widerstandes ohne E-Reihe
 	 * 
 	 * @param widerstandswert Widerstandswert als Double
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
 	 */
-	public Widerstand(double widerstandswert) {
+	public Widerstand(double widerstandswert) throws FalseInputException {
 		this.setWiderstandswert(widerstandswert);
 		this.farbringe = null;
 		this.eReihe = null;
@@ -207,8 +210,9 @@ public class Widerstand {
 	 * 
 	 * @param widerstandswert Widerstandswert als Double
 	 * @param eReihe          E-Reihe
+	 * @throws FalseInputException Fehler, wenn Widerstand kleiner 0 ist
 	 */
-	public Widerstand(double widerstandswert, EReihe eReihe) {
+	public Widerstand(double widerstandswert, EReihe eReihe) throws FalseInputException {
 		this.eReihe = eReihe;
 		if (this.eReihe == null || this.eReihe.getEReihenWerte().length == 0) {
 			this.setWiderstandswert(widerstandswert);
