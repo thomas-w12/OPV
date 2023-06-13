@@ -64,7 +64,7 @@ public class Widerstand {
 
 	/**
 	 * Methode zum Setzen des Widerstandswertes, darf maximal 3 Stellen haben,
-	 * darüber hinaus nur mit Potenz - NICHT FÜR EXTERNE VERWENDUNG
+	 * darüber hinaus nur mit Potenz
 	 * 
 	 * @param wert Widerstandswert
 	 * @throws FalseInputException Wenn der Wert mehr als 3 Stellen hat, wird ein Fehler geworfens
@@ -73,7 +73,7 @@ public class Widerstand {
 		if (wert < 1000 && wert > 0) {
 			this.wert = wert;
 		} else {
-			throw new FalseInputException("Wert darf maximal 3 Stellen haben!");
+			throw new FalseInputException("Wert darf maximal 3 Stellen haben und muss größer 0 sein!");
 		}
 	}
 
@@ -106,7 +106,7 @@ public class Widerstand {
 
 	/**
 	 * Methode zum Setzen der Fabringe - nur zu Testzwecken, überschreibt normales
-	 * Verhalten
+	 * Verhalten, nicht für externe Verwendung
 	 * 
 	 * @param fabringe Farbringe
 	 */
@@ -142,7 +142,7 @@ public class Widerstand {
 	}
 
 	/**
-	 * Methode zum Setzen des Widerstandswertes, nicht zur externen Verwendung
+	 * Methode zum Setzen des Widerstandswertes aus einer double
 	 * 
 	 * @param widerstandswert Widerstandswert als Double
 	 * @throws FalseInputException Fehler, wenn Widerstand kleiner gleich 0 ist
@@ -152,7 +152,6 @@ public class Widerstand {
 		int tempPotenz = 0;
 		if (widerstandswert <= 0) {
 			throw new FalseInputException("Widerstandswert darf nicht 0 oder kleiner sein!");
-			// temp = 1;
 		} else {
 			temp = widerstandswert;
 		}
