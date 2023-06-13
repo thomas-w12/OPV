@@ -117,10 +117,10 @@ public class EReihe {
 	}
 
 	/**
-	 * Standardkonstruktor der E-Reihe, E-Reihe enthält keine Werte
+	 * Standardkonstruktor der E-Reihe, enthält Werte der E12-Reihe
 	 */
 	public EReihe() {
-		this.setEReihenWerte(new double[0]);
+		this.setEReihenWerte(E12Werte);
 	}
 
 }
