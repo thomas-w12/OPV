@@ -29,8 +29,12 @@ public abstract class Operationsverstärker {
 	 * Methode zum Setzen von R_k
 	 * @param R_k Widerstand R_k
 	 */
-	public void setR_k(Widerstand R_k) {
-		this.R_k = R_k;
+	public void setR_k(Widerstand R_k) throws FalseInputException {
+		if (R_k.getWiderstandswert() > 0) {
+			this.R_k = R_k;
+		} else {
+			throw new FalseInputException("Widerstand kleiner 0");
+		}
 	}
 
 	/**
