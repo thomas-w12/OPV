@@ -1,6 +1,7 @@
 package GUI;
 
 import GUIModel.*;
+import exceptions.FalseInputException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -8,7 +9,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 
 /**
  * Panel, welches das Bild des Operationsverstärkers darstellt
@@ -41,28 +45,33 @@ public class ImagePanel extends JPanel implements ModelObserver {
         update();
     }
 
+
     private void displayImage(String selectedImage) {
         BufferedImage image = null;
         try {
             switch (selectedImage) {
                 case "Nichtinvertierer":
-                    image = ImageIO.read(new File("src/resources/Nichtinvertierer.png"));
+                    // image = ImageIO.read(new File("src/resources/Nichtinvertierer.png"));
+                    image = ImageLoader.loadImage("/resources/Nichtinvertierer.png");
                     break;
                 case "Invertierer":
-                    image = ImageIO.read(new File("src/resources/Invertierer.png"));
+                    // image = ImageIO.read(new File("src/resources/Invertierer.png"));
+                    image = ImageLoader.loadImage("/resources/Invertierer.png");
                     break;
                 case "Subtrahierer":
-                    image = ImageIO.read(new File("src/resources/Subtrahierer.png"));
+                    // image = ImageIO.read(new File("src/resources/Subtrahierer.png"));
+                    image = ImageLoader.loadImage("/resources/Subtrahierer.png");
                     break;
                 case "Summierer":
-                    image = ImageIO.read(new File("src/resources/Summierer.png"));
+                    // image = ImageIO.read(new File("src/resources/Summierer.png"));
+                    image = ImageLoader.loadImage("/resources/Summierer.png");
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, "Fehler, Bild nicht verfügbar", "Fehler",
                             JOptionPane.ERROR_MESSAGE);
                     break;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Fehler, Bild nicht verfügbar", "Fehler", JOptionPane.ERROR_MESSAGE);
         }
