@@ -7,6 +7,10 @@ import exceptions.FalseInputException;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 
+/**
+ * Klasse zum Laden der Bilder aus dem resources Ordner
+ * @author Simon Prießnitz, Thomas Wegele
+ */
 public class ImageLoader {
 
     public static BufferedImage loadImage(String imagePath) throws Exception {
