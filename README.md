@@ -2,4 +2,4 @@
 
 Projektgruppe StudiumPlus-B
 
-Die Anwendung wird über die `main`-Methode der Klasse `MainGUI` gestartet.
+Die Anwendung wird über die `main`-Methode der Klasse `OPV` gestartet.

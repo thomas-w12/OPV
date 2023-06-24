@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
  * Hauptklasse der Anwendung
  * @author Thomas Wegele
  */
-public class MainGUI {
+public class OPV {
 
     /**
      * Main-Methode der Anwendung, öffnet das Fenster
